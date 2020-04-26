@@ -4,26 +4,30 @@ import java.util.Scanner;
 
 public class Main {
 
+    private static Object Random;
+
     public static void main(String[] args) {
 
         //Get info needed to start sim:
         Scanner simController = new Scanner(System.in);
-//        System.out.println("How many roads?");
-//        main.setRoadSpawns(simController.nextInt());
-//        System.out.println("How many cars?");
-//        main.setCarSpawns(simController.nextInt());
-//        System.out.println("How many traffic lights?");
-//        main.setLightSpawns(simController.nextInt());
+        System.out.println("How many roads?");
+        int roadSpawns = simController.nextInt();
+        System.out.println("How many cars?");
+        int carSpawns = simController.nextInt();
+        System.out.println("How many traffic lights?");
+        int lightSpawns = simController.nextInt();
 
         // set values for user inputs for prototype.
-        int roadSpawns = 2;
-        int carSpawns = 1;
-        int lightSpawns = 1;
+//        int roadSpawns = 2;
+//        int carSpawns = 1;
+//        int lightSpawns = 1;
 
 
         //Create objects:
         System.out.println("Object Creation:\n---------------------");
-        System.out.println("Roads:");
+        System.out.println("Roads:" + roadSpawns);
+        System.out.println("Cars:" + carSpawns);
+        System.out.println("Traffic lights:" + lightSpawns);
         ArrayList<Road> roads = new ArrayList<>();
         for (int i = 0; i < roadSpawns; i++) {
             System.out.println("Please input parameters for road_" + i + "...");
@@ -49,9 +53,12 @@ public class Main {
 
         System.out.println("\nTraffic Lights;");
         ArrayList<TrafficLight> lights = new ArrayList<>();
-        for (int i = 0; i < lightSpawns; i++) {
-            lights.add(new TrafficLight(Integer.toString(i), roads.get(0))); // all created lights will begin on road_0.
-            lights.get(i).printLightStatus();
+        Random random = new Random();
+            for (int i = 0; i < lightSpawns; i++) {
+                int j = random.nextInt(roadSpawns);
+                lights.add(new TrafficLight(Integer.toString(i), roads.get(j))); // all created lights will begin on road_0.
+                lights.get(i).printLightStatus();
+
         }
         System.out.println();
 
@@ -66,7 +73,7 @@ public class Main {
 
         //Simulation loop:
         System.out.println("Simulation:");
-        Random random = new Random();
+
         int time = 0;
         System.out.print("Set time scale in milliseconds:");
         int speedOfSim = simController.nextInt();
