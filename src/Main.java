@@ -60,15 +60,20 @@ public class Main {
         System.out.println("\nBuses;");
         ArrayList<Bus> buses = new ArrayList<>();
         for (int i = 0; i < busSpawns; i++) {
-            buses.add(new Bus(Integer.toString(i), roads.get(0)));// all created cars will begin on road_0.
+            buses.add(new Bus(Integer.toString(i), roads.get(1)));// all created buses will begin on road_1.
             buses.get(i).printBusStatus();
+        }
+
+        System.out.println("\nBikes;");
+        ArrayList<Motorbike> bikes = new ArrayList<>();
+        for (int i = 0; i < bikeSpawns; i++) {
+            bikes.add(new Motorbike(Integer.toString(i), roads.get(0)));// all created bikes will begin on road_0.
+            bikes.get(i).printBikeStatus();
         }
 
         System.out.println("\nTraffic Lights;");
         ArrayList<TrafficLight> lights = new ArrayList<>();
-        Random random = new Random();
             for (int i = 0; i < lightSpawns; i++) {
-                int j = random.nextInt(roadSpawns);
                 lights.add(new TrafficLight(Integer.toString(i), roads.get(0))); // all created lights will begin on road_0.
                 lights.get(i).printLightStatus();
         }

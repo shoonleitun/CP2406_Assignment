@@ -8,6 +8,7 @@ public class Road {
     private int[] endLocation;
     private ArrayList<Car> carsOnRoad = new ArrayList<>();
     private ArrayList<Bus> busesOnRoad = new ArrayList<>();
+    private ArrayList<Motorbike> bikesOnRoad = new ArrayList<>();
     private ArrayList<TrafficLight> lightsOnRoad = new ArrayList<>();
     private ArrayList<Road> connectedRoads = new ArrayList<>();
 
@@ -92,6 +93,14 @@ public class Road {
 
     public void setBusesOnRoad(ArrayList<Bus> busesOnRoad) {
         this.busesOnRoad = busesOnRoad;
+    }
+
+    public ArrayList<Motorbike> getBikesOnRoad() {
+        return bikesOnRoad;
+    }
+
+    public void setBikesOnRoad(ArrayList<Motorbike> bikesOnRoad) {
+        this.bikesOnRoad = bikesOnRoad;
     }
 
     public ArrayList<TrafficLight> getLightsOnRoad() {
