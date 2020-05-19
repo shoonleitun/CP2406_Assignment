@@ -1,126 +1,174 @@
-import Model.*;
+import View.EditorPanel;
+import View.SimulationPanel;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import java.awt.*;
 
 public class Main {
 
-    private static Object Random;
+    private static final int WINDOW_WIDTH = 1600;
+    private static final int WINDOW_HEIGHT = 1024;
+    private static SimulationPanel simulationPanel = new SimulationPanel();
+    private static EditorPanel editorPanel = new EditorPanel();
+    private static final int SCALE = 8;
 
     public static void main(String[] args) {
+        // Simulation Window setup:
+        JFrame mainWindow = new JFrame("Traffic Simulator");
+        mainWindow.setLayout(new BorderLayout());
+        mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainWindow.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        //Get info needed to start sim:
-        Scanner simController = new Scanner(System.in);
-        //Getting the user input to check prototype
-        System.out.println("How many roads?");
-        int roadSpawns = simController.nextInt();
-        System.out.println("Model.Road Type: 1)");
-        System.out.println("How many cars?");
-        int carSpawns = simController.nextInt();
-        System.out.println("How many buses?");
-        int busSpawns = simController.nextInt();
-        System.out.println("How many motorbikes?");
-        int bikeSpawns = simController.nextInt();
-        System.out.println("How many traffic lights?");
-        int lightSpawns = simController.nextInt();
+        //Status Bar
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new GridLayout(1, 0));
+        bottomPanel.setBorder(BorderFactory.createLoweredSoftBevelBorder());
+        JLabel modeLabel = new JLabel("Mode: ");
+        bottomPanel.add(modeLabel);
+        JLabel statusLabel = new JLabel("Status: ");
+        bottomPanel.add(statusLabel);
+        mainWindow.add(bottomPanel, BorderLayout.SOUTH);
 
-        // set values for user inputs for prototype.
-//        int roadSpawns = 2;
-//        int carSpawns = 1;
-//        int lightSpawns = 1;
+        //Menu bar:
+        JMenuBar menuBar = new JMenuBar();
+        mainWindow.add(menuBar, BorderLayout.NORTH);
 
-
-        //Create objects:
-        System.out.println("Object Creation:\n---------------------");
-        System.out.println("Roads:" + roadSpawns);
-        System.out.println("Cars:" + carSpawns);
-        System.out.println("Traffic lights:" + lightSpawns);
-        ArrayList<Road> roads = new ArrayList<>();
-        for (int i = 0; i < roadSpawns; i++) {
-            System.out.println("Please input parameters f or road_" + i + "...");
-            System.out.print("Length:");
-            int lengthInput = simController.nextInt();
-//            System.out.print("Speed limit:");
-//            int speedLimitInput = simController.nextInt();
-            int speedLimitInput = 1; // force speed limit to be 1 for prototype.
-                roads.add(new Road(Integer.toString(i), speedLimitInput, lengthInput, new int[]{0, 0}));
-
-        }
-        System.out.println("\nRoads;");
-        for (Road road : roads) {
-            road.printRoadInfo();
-        }
-
-        System.out.println("\nCars;");
-        ArrayList<Car> cars = new ArrayList<>();
-        for (int i = 0; i < carSpawns; i++) {
-            cars.add(new Car(Integer.toString(i), roads.get(0)));// all created cars will begin on road_0.
-            cars.get(i).printCarStatus();
-        }
-
-        System.out.println("\nBuses;");
-        ArrayList<Bus> buses = new ArrayList<>();
-        for (int i = 0; i < busSpawns; i++) {
-            buses.add(new Bus(Integer.toString(i), roads.get(1)));// all created buses will begin on road_1.
-            buses.get(i).printBusStatus();
-        }
-
-        System.out.println("\nBikes;");
-        ArrayList<Motorbike> bikes = new ArrayList<>();
-
-        for (int i = 0; i < bikeSpawns; i++) {
-            bikes.add(new Motorbike(Integer.toString(i), roads.get(0)));// all created bikes will begin on road.
-            bikes.get(i).printBikeStatus();
-        }
-
-        System.out.println("\nTraffic Lights;");
-        ArrayList<TrafficLight> lights = new ArrayList<>();
-        Random random = new Random();
-            for (int i = 0; i < lightSpawns; i++) {
-                int j = random.nextInt(lightSpawns);
-                lights.add(new TrafficLight(Integer.toString(i), roads.get(i))); // all created lights will begin on different road.
-                lights.get(i).printLightStatus();
-        }
-        System.out.println();
-
-
-        // set locations and connections:
-        System.out.println("Settings:");
-        roads.get(1).setStartLocation(new int[]{roads.get(0).getLength() + 1, 0}); // place road_1 to a position at the end of road_0.
-        roads.get(1).printRoadInfo();
-        roads.get(0).getConnectedRoads().add(roads.get(1)); // connect road_0 to road_1
-        System.out.println();
-
-
-        //Simulation loop:
-        System.out.println("Simulation:");
-        Random r = new Random();
-        int time = 0;
-        System.out.print("Set time scale in milliseconds:");
-        int speedOfSim = simController.nextInt();
-        int carsFinished = 0;
-        while (carsFinished < cars.size()) {
-            for (TrafficLight light : lights) {
-                light.operate(r.nextInt());
-                light.printLightStatus();
+        //Editor Menu:
+        JMenu editMenu = new JMenu("City Editor");
+        MenuListener cityLis = new MenuListener() {
+            @Override
+            public void menuSelected(MenuEvent e) {
+                modeLabel.setText("Mode: Editor");
+                mainWindow.repaint();
             }
-            for (Car car : cars) {
-                car.move();
-                car.printCarStatus();
-                if (car.getCurrentRoad().getConnectedRoads().isEmpty() && (car.getSpeed() == 0)) {
-                    carsFinished = carsFinished + 1;
-                }
-            }
-            time = time + 1;
-            System.out.println(time + " Seconds have passed.\n");
-            try {
-                Thread.sleep(speedOfSim); // set speed of simulation.
-            } catch (InterruptedException sim) {
-                Thread.currentThread().interrupt();
-            }
-        }
 
+            @Override
+            public void menuDeselected(MenuEvent e) {
+            }
+
+            @Override
+            public void menuCanceled(MenuEvent e) {
+            }
+        };
+        editMenu.addMenuListener(cityLis);
+        menuBar.add(editMenu);
+
+        JMenuItem newMapItem = new JMenuItem("New");
+        newMapItem.addActionListener(e -> {
+            simulationPanel.setVisible(false);
+            mainWindow.remove(editorPanel);
+            editorPanel = new EditorPanel();
+            editorPanel.newMap();
+            editorPanel.setScale(SCALE);
+            mainWindow.add(editorPanel);
+            editorPanel.setVisible(true);
+            statusLabel.setText("Status: New Map");
+            mainWindow.validate();
+            mainWindow.repaint();
+        });
+        editMenu.add(newMapItem);
+
+        JMenuItem openMapItem = new JMenuItem("Open");
+        openMapItem.addActionListener(e -> {
+        });
+        editMenu.add(openMapItem);
+
+        JMenuItem saveMapItem = new JMenuItem("Save");
+        saveMapItem.addActionListener(e -> {
+        });
+        editMenu.add(saveMapItem);
+
+        JMenuItem exitProgramItem = new JMenuItem("Exit");
+        exitProgramItem.addActionListener(e -> System.exit(0));
+        editMenu.add(exitProgramItem);
+
+        //Simulation Menu:
+        JMenu simMenu = new JMenu("Simulation");
+        MenuListener simLis = new MenuListener() {
+            @Override
+            public void menuSelected(MenuEvent e) {
+                modeLabel.setText("Mode: Simulation");
+                mainWindow.repaint();
+            }
+
+            @Override
+            public void menuDeselected(MenuEvent e) {
+            }
+
+            @Override
+            public void menuCanceled(MenuEvent e) {
+            }
+        };
+        simMenu.addMenuListener(simLis);
+
+
+        JMenuItem loadSimItem = new JMenuItem("Load Map");
+        simMenu.add(loadSimItem);
+
+        JMenuItem spawnItem = new JMenuItem("Add Vehicles");
+        spawnItem.setEnabled(false);
+        simMenu.add(spawnItem);
+
+        JMenuItem startSimItem = new JMenuItem("Start");
+        startSimItem.setEnabled(false);
+        startSimItem.addActionListener(e -> {
+            simulationPanel.simulate();
+            statusLabel.setText("Status: Simulation Started");
+            simulationPanel.setStopSim(false);
+            mainWindow.validate();
+            mainWindow.repaint();
+        });
+        simMenu.add(startSimItem);
+
+        spawnItem.addActionListener(e -> {
+            String spawnInput = JOptionPane.showInputDialog("Total number of Vehicles to spawn:");
+            int spawns = Integer.parseInt(spawnInput);
+            simulationPanel.setVehicleSpawn(spawns);
+            String spawnRateInput = JOptionPane.showInputDialog("Number of Simulation tics between spawns:");
+            int spawnRate = Integer.parseInt(spawnRateInput);
+            simulationPanel.setVehicleSpawnRate(spawnRate);
+        });
+
+        JMenuItem stopSimItem = new JMenuItem("Stop");
+        stopSimItem.setEnabled(false);
+        stopSimItem.addActionListener(e -> {
+            simulationPanel.setStopSim(true);
+            statusLabel.setText("Status: Simulation Stopped");
+            mainWindow.validate();
+            mainWindow.repaint();
+        });
+        simMenu.add(stopSimItem);
+
+        loadSimItem.addActionListener(e -> {
+            statusLabel.setText("Status: Map Loaded!");
+            editorPanel.setVisible(false);
+            simulationPanel = new SimulationPanel();
+            simulationPanel.setScale(SCALE);
+            simulationPanel.loadMap(editorPanel.getRoads(), editorPanel.getLights());
+            mainWindow.add(simulationPanel);
+            startSimItem.setEnabled(true);
+            spawnItem.setEnabled(true);
+            stopSimItem.setEnabled(true);
+            mainWindow.repaint();
+        });
+
+        JMenuItem setUpdateRateItem = new JMenuItem("Update Rate");
+        setUpdateRateItem.addActionListener(e -> {
+            String updateRateInput = JOptionPane.showInputDialog("Enter the Update Rate of the Simulation");
+            int updateRate = Integer.parseInt(updateRateInput);
+            simulationPanel.setUpdateRate(updateRate);
+            statusLabel.setText("Status: Update Rate set to " + updateRate);
+            mainWindow.validate();
+            mainWindow.repaint();
+        });
+        simMenu.add(setUpdateRateItem);
+
+        menuBar.add(simMenu);
+
+        mainWindow.setLocationRelativeTo(null);
+        mainWindow.setVisible(true);
 
     }
 }
