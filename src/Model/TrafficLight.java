@@ -1,3 +1,7 @@
+package Model;
+
+import Model.Road;
+
 import java.util.Random;
 
 public class TrafficLight {

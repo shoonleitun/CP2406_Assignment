@@ -1,7 +1,9 @@
+package Model;
+
 public class Bus extends Car {
     private int speed; //segments moved per turn
     private int position; // position on current road
-    private Road currentRoad; // current Road object
+    private Road currentRoad; // current Model.Road object
     private static float breadth;
 
 

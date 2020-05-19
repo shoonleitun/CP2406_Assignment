@@ -1,3 +1,5 @@
+package Model;
+
 public class Car {
     private static final int STOPPED = 0; //car speed is 0m/s
     private static final int NEXT_ROAD_INDEX = 0;
@@ -7,7 +9,7 @@ public class Car {
     private static float breadth;
     private int speed; //segments moved per turn
     private int position; // position on current road
-    private Road currentRoad; // current Road object
+    private Road currentRoad; // current Model.Road object
 
 
     public Car(String id, Road currentRoad) {

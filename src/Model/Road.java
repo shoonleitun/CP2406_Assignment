@@ -1,3 +1,5 @@
+package Model;
+
 import java.util.ArrayList;
 
 public class Road {
@@ -22,7 +24,7 @@ public class Road {
 
 //    public void createCars(int carSpawns) {
 //        for (int i = 0; i < carSpawns; i++)
-//            carsOnRoad.add(new Car(Integer.toString(i), this));
+//            carsOnRoad.add(new Model.Car(Integer.toString(i), this));
 //    }
 
 
