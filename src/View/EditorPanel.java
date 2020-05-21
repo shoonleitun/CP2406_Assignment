@@ -15,7 +15,6 @@ public class EditorPanel extends JPanel {
     private ArrayList<TrafficLight> lights;
     private int scale;
 
-
     public void newMap() {
         roads = new ArrayList<>();
         lights = new ArrayList<>();
@@ -86,7 +85,7 @@ public class EditorPanel extends JPanel {
         super.paintComponent(g);
 
         if (roads.size() == 0) {
-            g.setColor(Color.YELLOW);
+            g.setColor(Color.pink);
             g.fillRect(0, 0, this.getWidth(), 10);
             g.fillRect(0, 0, 10, this.getHeight());
         }
@@ -95,13 +94,13 @@ public class EditorPanel extends JPanel {
             for (Road road : roads
             ) {
                 road.draw(g, scale);
-//                g.setColor(Color.YELLOW);
-//                int[] location = road.getEndLocation();
-//                int x = location[0];
-//                int y = location[1];
-//                int width = 10 * scale;
-//                int height = road.getWidth() * scale;
-//                g.fillRect(x,y,width,height);
+                g.setColor(Color.green);
+                int[] location = road.getEndLocation();
+                int x = location[0];
+                int y = location[1];
+                int width = 10 * scale;
+                int height = road.getWidth() * scale;
+                g.fillRect(x,y,width,height);
             }
         }
 

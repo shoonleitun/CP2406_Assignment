@@ -6,13 +6,15 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import java.awt.*;
 
+import static java.awt.Color.*;
+
 public class Main {
 
-    private static final int WINDOW_WIDTH = 1600;
-    private static final int WINDOW_HEIGHT = 1024;
+    private static final int WINDOW_WIDTH = 1200;
+    private static final int WINDOW_HEIGHT = 800;
     private static SimulationPanel simulationPanel = new SimulationPanel();
     private static EditorPanel editorPanel = new EditorPanel();
-    private static final int SCALE = 8;
+    private static final int SCALE = 6;
 
     public static void main(String[] args) {
         // Simulation Window setup:
@@ -32,31 +34,69 @@ public class Main {
         mainWindow.add(bottomPanel, BorderLayout.SOUTH);
 
         //Menu bar:
-        JMenuBar menuBar = new JMenuBar();
-        mainWindow.add(menuBar, BorderLayout.NORTH);
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new GridLayout(1,0));
+        JButton sim = new JButton("Simulator");
+        JButton city = new JButton("City Editor");
+        mainWindow.add(topPanel, BorderLayout.NORTH);
 
-        //Editor Menu:
-        JMenu editMenu = new JMenu("City Editor");
-        MenuListener cityLis = new MenuListener() {
-            @Override
-            public void menuSelected(MenuEvent e) {
-                modeLabel.setText("Mode: Editor");
-                mainWindow.repaint();
-            }
+        //Side Bar
+        JPanel sidePanel = new JPanel();
+        sidePanel.setLayout(new GridLayout(25, 1));
+        sidePanel.setBorder(BorderFactory.createLoweredSoftBevelBorder());
+        JButton newCity = new JButton("New");
+        JButton open = new JButton("Open");
+        JButton save = new JButton("Save");
+        JButton exit = new JButton("Exit");
+        mainWindow.add(sidePanel, BorderLayout.WEST);
 
-            @Override
-            public void menuDeselected(MenuEvent e) {
-            }
+        //West container(Simulator)
+        JButton loadMap = new JButton("Load Map");
+        JButton addVehicle = new JButton("Add Vehicle");
+        JButton start = new JButton("Start");
+        JButton stop = new JButton("Stop");
+        JButton update = new JButton("Update Rate");
+        mainWindow.add(sidePanel, BorderLayout.WEST);
 
-            @Override
-            public void menuCanceled(MenuEvent e) {
-            }
-        };
-        editMenu.addMenuListener(cityLis);
-        menuBar.add(editMenu);
 
-        JMenuItem newMapItem = new JMenuItem("New");
-        newMapItem.addActionListener(e -> {
+        //Editor
+        loadMap.setEnabled(false);
+        addVehicle.setEnabled(false);
+        start.setEnabled(false);
+        stop.setEnabled(false);
+        update.setEnabled(false);
+        newCity.setEnabled(false);
+        open.setEnabled(false);
+        save.setEnabled(false);
+        exit.setEnabled(false);
+
+        topPanel.add(city);
+        city.setBackground(lightGray);
+        city.addActionListener(e -> {
+            city.setBackground(new Color(204, 255, 229));
+            sim.setBackground(lightGray);
+            loadMap.setEnabled(false);
+            loadMap.setBackground(white);
+            addVehicle.setEnabled(false);
+            addVehicle.setBackground(white);
+            start.setEnabled(false);
+            start.setBackground(white);
+            stop.setEnabled(false);
+            stop.setBackground(white);
+            update.setEnabled(false);
+            update.setBackground(white);
+            newCity.setEnabled(true);
+            newCity.setBackground(new Color(255,204,229));
+            open.setEnabled(true);
+            open.setBackground(new Color(255,204,229));
+            save.setEnabled(true);
+            save.setBackground(new Color(255,204,229));
+            exit.setEnabled(true);
+            exit.setBackground(new Color(255,204,229));
+        });
+        sidePanel.add(newCity);
+        sidePanel.setBackground(lightGray);
+        newCity.addActionListener(e -> {
             simulationPanel.setVisible(false);
             mainWindow.remove(editorPanel);
             editorPanel = new EditorPanel();
@@ -68,61 +108,59 @@ public class Main {
             mainWindow.validate();
             mainWindow.repaint();
         });
-        editMenu.add(newMapItem);
 
-        JMenuItem openMapItem = new JMenuItem("Open");
-        openMapItem.addActionListener(e -> {
+        sidePanel.add(open);
+        open.addActionListener(e -> {
         });
-        editMenu.add(openMapItem);
 
-        JMenuItem saveMapItem = new JMenuItem("Save");
-        saveMapItem.addActionListener(e -> {
+        sidePanel.add(save);
+        save.addActionListener(e -> {
         });
-        editMenu.add(saveMapItem);
 
-        JMenuItem exitProgramItem = new JMenuItem("Exit");
-        exitProgramItem.addActionListener(e -> System.exit(0));
-        editMenu.add(exitProgramItem);
+        sidePanel.add(exit);
+        exit.addActionListener(e -> System.exit(0));
 
-        //Simulation Menu:
-        JMenu simMenu = new JMenu("Simulation");
-        MenuListener simLis = new MenuListener() {
-            @Override
-            public void menuSelected(MenuEvent e) {
-                modeLabel.setText("Mode: Simulation");
-                mainWindow.repaint();
-            }
+        //Simulator
+        sim.setBackground(lightGray);
+        sim.addActionListener(e -> {
+            sim.setBackground(new Color(204, 255, 229));
+            city.setBackground(lightGray);
+            newCity.setEnabled(false);
+            newCity.setBackground(white);
+            open.setEnabled(false);
+            open.setBackground(white);
+            save.setEnabled(false);
+            save.setBackground(white);
+            exit.setEnabled(false);
+            exit.setBackground(white);
+            loadMap.setEnabled(true);
+            loadMap.setBackground(new Color(204, 255, 255));
+            addVehicle.setEnabled(true);
+            addVehicle.setBackground(new Color(204, 255, 255));
+            start.setEnabled(true);
+            start.setBackground(new Color(102, 255, 102));
+            stop.setEnabled(true);
+            stop.setBackground(new Color(255, 51, 51));
+            update.setEnabled(true);
+            update.setBackground(new Color(204, 255, 255));
+        });
+        topPanel.add(sim);
+        sidePanel.add(loadMap);
 
-            @Override
-            public void menuDeselected(MenuEvent e) {
-            }
+        sidePanel.add(addVehicle);
+        addVehicle.setEnabled(false);
 
-            @Override
-            public void menuCanceled(MenuEvent e) {
-            }
-        };
-        simMenu.addMenuListener(simLis);
-
-
-        JMenuItem loadSimItem = new JMenuItem("Load Map");
-        simMenu.add(loadSimItem);
-
-        JMenuItem spawnItem = new JMenuItem("Add Vehicles");
-        spawnItem.setEnabled(false);
-        simMenu.add(spawnItem);
-
-        JMenuItem startSimItem = new JMenuItem("Start");
-        startSimItem.setEnabled(false);
-        startSimItem.addActionListener(e -> {
+        sidePanel.add(start);
+        start.setEnabled(false);
+        start.addActionListener(e -> {
             simulationPanel.simulate();
             statusLabel.setText("Status: Simulation Started");
             simulationPanel.setStopSim(false);
             mainWindow.validate();
             mainWindow.repaint();
         });
-        simMenu.add(startSimItem);
 
-        spawnItem.addActionListener(e -> {
+        addVehicle.addActionListener(e -> {
             String spawnInput = JOptionPane.showInputDialog("Total number of Vehicles to spawn:");
             int spawns = Integer.parseInt(spawnInput);
             simulationPanel.setVehicleSpawn(spawns);
@@ -131,31 +169,30 @@ public class Main {
             simulationPanel.setVehicleSpawnRate(spawnRate);
         });
 
-        JMenuItem stopSimItem = new JMenuItem("Stop");
-        stopSimItem.setEnabled(false);
-        stopSimItem.addActionListener(e -> {
+        sidePanel.add(stop);
+        stop.setEnabled(false);
+        stop.addActionListener(e -> {
             simulationPanel.setStopSim(true);
             statusLabel.setText("Status: Simulation Stopped");
             mainWindow.validate();
             mainWindow.repaint();
         });
-        simMenu.add(stopSimItem);
 
-        loadSimItem.addActionListener(e -> {
+        loadMap.addActionListener(e -> {
             statusLabel.setText("Status: Map Loaded!");
             editorPanel.setVisible(false);
             simulationPanel = new SimulationPanel();
             simulationPanel.setScale(SCALE);
             simulationPanel.loadMap(editorPanel.getRoads(), editorPanel.getLights());
             mainWindow.add(simulationPanel);
-            startSimItem.setEnabled(true);
-            spawnItem.setEnabled(true);
-            stopSimItem.setEnabled(true);
+            start.setEnabled(true);
+            addVehicle.setEnabled(true);
+            stop.setEnabled(true);
             mainWindow.repaint();
         });
 
-        JMenuItem setUpdateRateItem = new JMenuItem("Update Rate");
-        setUpdateRateItem.addActionListener(e -> {
+        sidePanel.add(update);
+        update.addActionListener(e -> {
             String updateRateInput = JOptionPane.showInputDialog("Enter the Update Rate of the Simulation");
             int updateRate = Integer.parseInt(updateRateInput);
             simulationPanel.setUpdateRate(updateRate);
@@ -163,9 +200,6 @@ public class Main {
             mainWindow.validate();
             mainWindow.repaint();
         });
-        simMenu.add(setUpdateRateItem);
-
-        menuBar.add(simMenu);
 
         mainWindow.setLocationRelativeTo(null);
         mainWindow.setVisible(true);

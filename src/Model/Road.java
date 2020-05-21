@@ -72,7 +72,7 @@ public class Road {
         return length;
     }
 
-    int getWidth() {
+    public int getWidth() {
         return width;
     }
 
