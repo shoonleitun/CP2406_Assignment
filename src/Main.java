@@ -1,12 +1,15 @@
+import Model.SaveFile;
 import View.EditorPanel;
 import View.SimulationPanel;
 
 import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
-import static java.awt.Color.*;
+import static java.awt.Color.lightGray;
+import static java.awt.Color.white;
 
 public class Main {
 
@@ -14,6 +17,7 @@ public class Main {
     private static final int WINDOW_HEIGHT = 800;
     private static SimulationPanel simulationPanel = new SimulationPanel();
     private static EditorPanel editorPanel = new EditorPanel();
+    private static SaveFile saveFile = new SaveFile();
     private static final int SCALE = 6;
 
     public static void main(String[] args) {
@@ -111,10 +115,19 @@ public class Main {
 
         sidePanel.add(open);
         open.addActionListener(e -> {
+            Desktop desktop = Desktop.getDesktop();
+            File file = new File("C:\\");
+           try {
+               desktop.open(file);
+           } catch (IOException e1){
+               e1.printStackTrace();
+           }
+
         });
 
         sidePanel.add(save);
         save.addActionListener(e -> {
+
         });
 
         sidePanel.add(exit);

@@ -8,6 +8,7 @@ public class Car extends Vehicle {
         setLength(super.getLength());
         breadth = length / 2;
         position = -length;
+
     }
 
 }
